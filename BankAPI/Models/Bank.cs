@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace BankAPI.Models;
 
@@ -11,10 +12,11 @@ public class Bank
     }
 
     [Key]
-    public string bankCode {get; set;}
-    public string name {get; set;}
-    public string adress { get; set; }
+    public string? bankCode {get; set;}
+    public string? name {get; set;}
+    public string? adress { get; set; }
 
     //relacion entre entity
+    [JsonIgnore]
     public virtual ICollection<Account> Accounts {get; set;}
 }

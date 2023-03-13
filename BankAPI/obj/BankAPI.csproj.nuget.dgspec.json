@@ -1,32 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Bootcamp-2\\Desktop\\Project SPI\\BankAPI\\BankAPI.csproj": {}
+    "C:\\Users\\gcaballero\\Documents\\Project-SPI\\BankAPI\\BankAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Bootcamp-2\\Desktop\\Project SPI\\BankAPI\\BankAPI.csproj": {
+    "C:\\Users\\gcaballero\\Documents\\Project-SPI\\BankAPI\\BankAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Bootcamp-2\\Desktop\\Project SPI\\BankAPI\\BankAPI.csproj",
+        "projectUniqueName": "C:\\Users\\gcaballero\\Documents\\Project-SPI\\BankAPI\\BankAPI.csproj",
         "projectName": "BankAPI",
-        "projectPath": "C:\\Users\\Bootcamp-2\\Desktop\\Project SPI\\BankAPI\\BankAPI.csproj",
-        "packagesPath": "C:\\Users\\Bootcamp-2\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Bootcamp-2\\Desktop\\Project SPI\\BankAPI\\obj\\",
+        "projectPath": "C:\\Users\\gcaballero\\Documents\\Project-SPI\\BankAPI\\BankAPI.csproj",
+        "packagesPath": "C:\\Users\\gcaballero\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gcaballero\\Documents\\Project-SPI\\BankAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Bootcamp-2\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\gcaballero\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net6.0": {
+            "targetAlias": "net6.0",
             "projectReferences": {}
           }
         },
@@ -37,18 +35,20 @@
         }
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net6.0": {
+          "targetAlias": "net6.0",
           "dependencies": {
-            "Microsoft.AspNetCore.OpenApi": {
-              "target": "Package",
-              "version": "[7.0.3, )"
-            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[7.0.3, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
@@ -60,7 +60,7 @@
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.4.0, )"
+              "version": "[6.2.3, )"
             }
           },
           "imports": [
@@ -82,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.406\\RuntimeIdentifierGraph.json"
         }
       }
     }

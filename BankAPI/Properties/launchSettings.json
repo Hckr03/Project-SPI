@@ -4,27 +4,17 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:17997",
-      "sslPort": 44300
+      "applicationUrl": "http://localhost:40933",
+      "sslPort": 44304
     }
   },
   "profiles": {
-    "http": {
+    "BankAPI": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5297",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "https": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7052;http://localhost:5297",
+      "applicationUrl": "https://localhost:7132;http://localhost:5127",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

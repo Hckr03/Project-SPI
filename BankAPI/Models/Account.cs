@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace BankAPI.Models;
 
@@ -10,18 +11,19 @@ public class Account
     }
 
     [Key]
-    public string id_account {get; set;}
-    public string accountNum {get; set;}
-    public string currency { get; set; }
+    public string? id_account {get; set;}
+    public string? accountNum {get; set;}
+    public string? currency { get; set; }
     public decimal balance { get; set; }
     
     //se supone son mi FK
-    public string docNumber { get; set; }
-    public string bankId { get; set; }
+    public string? docNumber { get; set; }
+    public string? bankId { get; set; }
     //hasta aqui se define los FK
 
     //relaciones entre entities
-    public virtual Client client { get; set; }
-    public virtual Bank Bank { get; set; }
+    public virtual Client? client { get; set; }
+    public virtual Bank? bank { get; set; }
+    [JsonIgnore]
     public virtual ICollection<Transfer> Transfers { get; set; }
 }

@@ -1,5 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using BankAPI.Data;
+using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,7 @@ builder.Services.AddSwaggerGen();
 
 //BankDbContext
 var connectionString = builder.Configuration.GetConnectionString("PostgreSQLConnection");
-builder.Services.AddDbContext<BankContext>(options =>
+builder.Services.AddDbContext<BankDbContext>(options =>
 options.UseNpgsql(connectionString));
 
 var app = builder.Build();
