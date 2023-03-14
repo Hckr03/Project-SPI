@@ -6,7 +6,7 @@ namespace BankAPI.Models;
 public class Transfer
 {
     [Key]
-    public string? id_transaction {get; set;}
+    public Guid? id_transaction {get; set;}
 
     //se supone son mi FK
     public string? accountNum {get; set;}

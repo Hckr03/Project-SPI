@@ -1,4 +1,5 @@
 using BankAPI.Data;
+using BankAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -11,10 +12,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//nuevos services
+builder.Services.AddScoped<ClientService>();
+builder.Services.AddScoped<BankService>();
+builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<TransferService>();
+
 //BankDbContext
 var connectionString = builder.Configuration.GetConnectionString("PostgreSQLConnection");
 builder.Services.AddDbContext<BankDbContext>(options =>
 options.UseNpgsql(connectionString));
+
 
 var app = builder.Build();
 

@@ -24,30 +24,26 @@ namespace BankAPI.Migrations
 
             modelBuilder.Entity("BankAPI.Models.Account", b =>
                 {
-                    b.Property<string>("id_account")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("id_account")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("accountNum")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<decimal>("balance")
                         .HasColumnType("numeric");
 
-                    b.Property<string>("bankId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid?>("bankId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("clientdocNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("currency")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("docNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("id_account");
@@ -61,15 +57,14 @@ namespace BankAPI.Migrations
 
             modelBuilder.Entity("BankAPI.Models.Bank", b =>
                 {
-                    b.Property<string>("bankCode")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("bankCode")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("adress")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("bankCode");
@@ -83,11 +78,9 @@ namespace BankAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("docType")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("docNumber");
@@ -101,11 +94,10 @@ namespace BankAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("accountNum")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("accountid_account")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("accountid_account")
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("amount")
                         .HasColumnType("numeric");
@@ -117,11 +109,9 @@ namespace BankAPI.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("docNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("state")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("id_transaction");
@@ -135,19 +125,15 @@ namespace BankAPI.Migrations
 
             modelBuilder.Entity("BankAPI.Models.Account", b =>
                 {
-                    b.HasOne("BankAPI.Models.Bank", "Bank")
+                    b.HasOne("BankAPI.Models.Bank", "bank")
                         .WithMany("Accounts")
-                        .HasForeignKey("bankId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("bankId");
 
                     b.HasOne("BankAPI.Models.Client", "client")
                         .WithMany("Accounts")
-                        .HasForeignKey("clientdocNumber")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("clientdocNumber");
 
-                    b.Navigation("Bank");
+                    b.Navigation("bank");
 
                     b.Navigation("client");
                 });

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BankAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class firstmigration : Migration
+    public partial class firtsmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,9 +15,9 @@ namespace BankAPI.Migrations
                 name: "Banks",
                 columns: table => new
                 {
-                    bankCode = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    adress = table.Column<string>(type: "text", nullable: false)
+                    bankCode = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: true),
+                    adress = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,8 +29,8 @@ namespace BankAPI.Migrations
                 columns: table => new
                 {
                     docNumber = table.Column<string>(type: "text", nullable: false),
-                    docType = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: false)
+                    docType = table.Column<string>(type: "text", nullable: true),
+                    name = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -41,13 +41,13 @@ namespace BankAPI.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    id_account = table.Column<string>(type: "text", nullable: false),
-                    accountNum = table.Column<string>(type: "text", nullable: false),
-                    currency = table.Column<string>(type: "text", nullable: false),
+                    id_account = table.Column<Guid>(type: "uuid", nullable: false),
+                    accountNum = table.Column<string>(type: "text", nullable: true),
+                    currency = table.Column<string>(type: "text", nullable: true),
                     balance = table.Column<decimal>(type: "numeric", nullable: false),
-                    docNumber = table.Column<string>(type: "text", nullable: false),
-                    bankId = table.Column<string>(type: "text", nullable: false),
-                    clientdocNumber = table.Column<string>(type: "text", nullable: false)
+                    docNumber = table.Column<string>(type: "text", nullable: true),
+                    bankId = table.Column<Guid>(type: "uuid", nullable: true),
+                    clientdocNumber = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -56,14 +56,12 @@ namespace BankAPI.Migrations
                         name: "FK_Accounts_Banks_bankId",
                         column: x => x.bankId,
                         principalTable: "Banks",
-                        principalColumn: "bankCode",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "bankCode");
                     table.ForeignKey(
                         name: "FK_Accounts_Clients_clientdocNumber",
                         column: x => x.clientdocNumber,
                         principalTable: "Clients",
-                        principalColumn: "docNumber",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "docNumber");
                 });
 
             migrationBuilder.CreateTable(
@@ -71,12 +69,12 @@ namespace BankAPI.Migrations
                 columns: table => new
                 {
                     id_transaction = table.Column<string>(type: "text", nullable: false),
-                    accountNum = table.Column<string>(type: "text", nullable: false),
-                    docNumber = table.Column<string>(type: "text", nullable: false),
+                    accountNum = table.Column<string>(type: "text", nullable: true),
+                    docNumber = table.Column<string>(type: "text", nullable: true),
                     date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    state = table.Column<string>(type: "text", nullable: false),
-                    accountid_account = table.Column<string>(type: "text", nullable: true),
+                    state = table.Column<string>(type: "text", nullable: true),
+                    accountid_account = table.Column<Guid>(type: "uuid", nullable: true),
                     clientdocNumber = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
