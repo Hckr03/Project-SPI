@@ -12,7 +12,7 @@ public class Bank
     }
 
     [Key]
-    public Guid? bankCode {get; set;}
+    public Guid? bankCode {get; set;} 
     public string? name {get; set;}
     public string? adress { get; set; }
 
