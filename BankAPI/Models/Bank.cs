@@ -8,7 +8,7 @@ public class Bank
     //asi se crea la relacion 1 a varios
     //luego en el constructor se crea un HashSet del tipo de la clase
     public Bank(){
-        this.Accounts = new HashSet<Account>();
+        this.accounts = new HashSet<Account>();
     }
 
     [Key]
@@ -19,5 +19,5 @@ public class Bank
 
     //relacion entre entity
     [JsonIgnore]
-    public virtual ICollection<Account> Accounts {get; set;}
+    public virtual ICollection<Account> accounts {get; set;}
 }

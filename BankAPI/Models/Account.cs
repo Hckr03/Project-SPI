@@ -7,7 +7,7 @@ public class Account
 {
     public Account()
     {
-        this.Transfers = new HashSet<Transfer>();
+        this.transfers = new HashSet<Transfer>();
     }
 
     [Key]
@@ -18,7 +18,7 @@ public class Account
     
     //se supone son mi FK
     public string? docNumber { get; set; }
-    public Guid? bankId { get; set; }
+    public string? bankCode { get; set; }
     //hasta aqui se define los FK
 
     //relaciones entre entities
@@ -27,5 +27,5 @@ public class Account
     [JsonIgnore]
     public virtual Bank? bank { get; set; }
     [JsonIgnore]
-    public virtual ICollection<Transfer> Transfers { get; set; }
+    public virtual ICollection<Transfer> transfers { get; set; }
 }

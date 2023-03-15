@@ -39,7 +39,7 @@ public class AccountService
         {
             existingAccount.accountNum = account.accountNum;
             existingAccount.balance = account.balance;
-            existingAccount.bankId = account.bankId;
+            existingAccount.bankCode = account.bankCode;
             existingAccount.docNumber = account.docNumber;
             existingAccount.currency = account.currency;
 
