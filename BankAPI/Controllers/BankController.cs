@@ -22,62 +22,76 @@ public class BankController : ControllerBase
         return await bankService.GetAll();
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Bank>> GetById(Guid id)
+    // [HttpGet("{id}")]
+    // public async Task<ActionResult<Bank>> GetById(Guid id)
+    // {
+    //     var bank = await bankService.GetById(id);
+    //     if(bank is null)
+    //     {
+    //         return NotFound(new { message = "El ID = ({id}) no existe!"});
+    //     }
+    //     return bank;
+    // }
+
+    [HttpGet("{code}")]
+    public async Task<ActionResult<Bank>> GetByCode(String code)
     {
-        var client = await bankService.GetById(id);
-        if(client is null)
+        var bank = await bankService.GetByCode(code);
+        if(bank is null)
         {
-            return BankNotFound(id);
+            return BankNotFound(code);
         }
-        return client;
+        return bank;
     }
 
     [HttpPost]
     public async Task<ActionResult<Bank>> Create(Bank bank)
     {
+        if(await bankService.GetByCode(bank.bankCode) is not null)
+        {
+            return BadRequest(new {message = $"El codigo de banco ({bank.bankCode}) ya existe!"});
+        }
         var newBank = await bankService.Create(bank);
-        return  CreatedAtAction(nameof(GetById), new { id = newBank.bankCode}, newBank);
+        return  CreatedAtAction(nameof(GetByCode), new { code = newBank.bankCode}, newBank);
     }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult<Bank>> Update(Guid id, Bank bank)
+    [HttpPut("{code}")]
+    public async Task<ActionResult<Bank>> Update(String code, Bank bank)
     {
-        if(id != bank.bankCode)
+        if(code != bank.bankCode)
         {
-            return BadRequest(new { message = $"El nro del Banco({id}) de la URL no coincide con el nro. del Banco({bank.bankCode}) del cuerpo de la solicitud."});
+            return BadRequest(new { message = $"El nro del Banco({code}) de la URL no coincide con el nro. del Banco({bank.bankCode}) del cuerpo de la solicitud."});
         }
 
-        var bankToUpdate = await bankService.GetById(id);
+        var bankToUpdate = await bankService.GetByCode(code);
         if(bankToUpdate is not null)
         {
-            await bankService.Update(id, bank);
+            await bankService.Update(code, bank);
             return NoContent();
         }
         else
         {
-            return BankNotFound(id);
+            return BankNotFound(code);
         }
-        
     }
 
     [HttpDelete]
-    public async Task<ActionResult<Bank>> Delete(Guid id)
+    public async Task<ActionResult<Bank>> Delete(String code)
     {
-        var bankToDelete = await bankService.GetById(id);
+        var bankToDelete = await bankService.GetByCode(code);
         if(bankToDelete is not null)
         {
-            await bankService.Delete(id);
+            await bankService.Delete(code);
             return Ok();
         }
         else
         {
-            return BankNotFound(id);
+            return BankNotFound(code);
         }
     }
 
-    private NotFoundObjectResult BankNotFound(Guid id)
+    private NotFoundObjectResult BankNotFound(String code)
     {
-        return NotFound(new { message = $"El Banco con ID = {id} no existe."});
+        return NotFound(new { message = $"El Banco con ID = {code} no existe."});
     }
 }

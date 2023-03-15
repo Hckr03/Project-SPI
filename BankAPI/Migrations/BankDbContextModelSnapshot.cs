@@ -57,17 +57,20 @@ namespace BankAPI.Migrations
 
             modelBuilder.Entity("BankAPI.Models.Bank", b =>
                 {
-                    b.Property<Guid?>("bankCode")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("adress")
                         .HasColumnType("text");
 
+                    b.Property<string>("bankCode")
+                        .HasColumnType("text");
+
                     b.Property<string>("name")
                         .HasColumnType("text");
 
-                    b.HasKey("bankCode");
+                    b.HasKey("id");
 
                     b.ToTable("Banks");
                 });
@@ -90,8 +93,9 @@ namespace BankAPI.Migrations
 
             modelBuilder.Entity("BankAPI.Models.Transfer", b =>
                 {
-                    b.Property<string>("id_transaction")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("id_transaction")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("accountNum")
                         .HasColumnType("text");

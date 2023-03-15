@@ -20,29 +20,22 @@ public class BankService
         return await bankDbContext.Banks.ToListAsync();
     }
     
-    public async Task<Bank?> GetById(Guid id)
+    public async Task<Bank?> GetByCode(String code)
     {
-        return await bankDbContext.Banks.FindAsync(id);
+        return await bankDbContext.Banks
+        .FirstOrDefaultAsync(b => b.bankCode.ToLower() == code.ToLower());
     }
 
      public async Task<Bank> Create(Bank newBank)
     {
-        // var existBankByName = bankDbContext.Banks.FirstOrDefault(n => n.name == bank.name);
-        // var findByName = bankDbContext.Banks
-        //     .Where(b => b.name == newBank.name)
-        //     .FirstOrDefault();
-
-        // if(findByName is null)
-        // {
             bankDbContext.Banks.Add(newBank);
             await bankDbContext.SaveChangesAsync();
-        // }
         return newBank;
     }
 
-     public async Task Update(Guid id, Bank bank)
+     public async Task Update(String code, Bank bank)
     {
-        var existingBank = await GetById(id);
+        var existingBank = await GetByCode(code);
 
         if (existingBank is not null)
         {
@@ -53,15 +46,24 @@ public class BankService
         }
     }
 
-    public async Task Delete(Guid id)
+    public async Task Delete(String code)
     {
-        var bankToDelete = await GetById(id);
+        var bankToDelete = await GetByCode(code);
 
         if(bankToDelete is not null)
         {
             bankDbContext.Banks.Remove(bankToDelete);
             await bankDbContext.SaveChangesAsync();
         }
+    }
+
+    public async Task<Bank> ExistByCode(String code)
+    {
+            var existByCode = await bankDbContext.Banks
+            .Where(b => b.bankCode.ToLower() == code.ToLower())
+            .FirstOrDefaultAsync();
+
+            return existByCode;
     }
         
 }

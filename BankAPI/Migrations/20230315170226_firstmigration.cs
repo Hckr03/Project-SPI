@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BankAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class firtsmigration : Migration
+    public partial class firstmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,13 +15,14 @@ namespace BankAPI.Migrations
                 name: "Banks",
                 columns: table => new
                 {
-                    bankCode = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    bankCode = table.Column<string>(type: "text", nullable: true),
                     name = table.Column<string>(type: "text", nullable: true),
                     adress = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Banks", x => x.bankCode);
+                    table.PrimaryKey("PK_Banks", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -56,7 +57,7 @@ namespace BankAPI.Migrations
                         name: "FK_Accounts_Banks_bankId",
                         column: x => x.bankId,
                         principalTable: "Banks",
-                        principalColumn: "bankCode");
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_Accounts_Clients_clientdocNumber",
                         column: x => x.clientdocNumber,
@@ -68,7 +69,7 @@ namespace BankAPI.Migrations
                 name: "Transfers",
                 columns: table => new
                 {
-                    id_transaction = table.Column<string>(type: "text", nullable: false),
+                    id_transaction = table.Column<Guid>(type: "uuid", nullable: false),
                     accountNum = table.Column<string>(type: "text", nullable: true),
                     docNumber = table.Column<string>(type: "text", nullable: true),
                     date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
