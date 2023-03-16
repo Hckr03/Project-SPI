@@ -10,7 +10,7 @@ public class Transfer
 
     //se supone son mi FK
     public string? accountNum {get; set;}
-    public String? docNumber { get; set; }
+    public string? docNumber { get; set; }
     //hasta aqui se define los FK
 
     public DateTime date { get; set; }

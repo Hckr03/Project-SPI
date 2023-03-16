@@ -22,9 +22,8 @@ public class Account
     //hasta aqui se define los FK
 
     //relaciones entre entities
-    [JsonIgnore]
     public virtual Client? client { get; set; }
-    [JsonIgnore]
     public virtual Bank? bank { get; set; }
+    [JsonIgnore]
     public virtual ICollection<Transfer> transfers { get; set; }
 }

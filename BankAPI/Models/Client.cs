@@ -7,12 +7,12 @@ public class Client
 {
     public Client()
     {
-        this.accounts = new HashSet<Account>();
-        this.transfers = new HashSet<Transfer>();
+        this.accounts = new HashSet<Account?>();
+        this.transfers = new HashSet<Transfer?>();
     }
 
     [Key]
-    public string docNumber {get; set;}
+    public string? docNumber {get; set;}
     public string? docType {get; set;}
     public string? name { get; set; }
 

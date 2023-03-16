@@ -2,23 +2,27 @@
 
 using BankAPI.Data;
 using BankAPI.Models;
+using BankAPI.Models.Dtos;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace BankAPI.Services;
 
 public class AccountService
 {
     private readonly BankDbContext bankDbContext;
+    private readonly ClientService clientService;
 
-    public AccountService(BankDbContext bankDbContext){
+    public AccountService(BankDbContext bankDbContext, ClientService clientService){
         this.bankDbContext = bankDbContext;
+        this.clientService = clientService;
     }
 
     public async Task<IEnumerable<Account>> GetAll()
     {
         return await bankDbContext.Accounts
-            .Include(c => c.client)
-            .Include(b => b.bank)
+            .Include(a => a.client)
+            .Include(a => a.bank)
             .ToListAsync();
     }
 
@@ -29,10 +33,17 @@ public class AccountService
 
     public async Task<Account> Create(Account newAccount)
     {
-            bankDbContext.Accounts.Add(newAccount);
-            await bankDbContext.SaveChangesAsync();
+        // var newAccount = new Account();
+        // newAccount.accountNum = account.accountNum;
+        // newAccount.currency = account.currency;
+        // newAccount.balance = account.balance;
+        // newAccount.docNumber = account.docNumber;
+        // newAccount.bankCode = account.bankCode;
 
-            return newAccount;
+        bankDbContext.Accounts.Add(newAccount);
+        await bankDbContext.SaveChangesAsync();
+
+        return newAccount;
     }
 
     public async Task Update(Guid id, Account account)

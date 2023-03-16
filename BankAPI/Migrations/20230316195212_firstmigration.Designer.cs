@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BankAPI.Migrations
 {
     [DbContext(typeof(BankDbContext))]
-    [Migration("20230316160359_firtsmigration")]
-    partial class firtsmigration
+    [Migration("20230316195212_firstmigration")]
+    partial class firstmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
