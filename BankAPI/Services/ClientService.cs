@@ -18,7 +18,7 @@ public class ClientService
     public async Task<IEnumerable<Client>> GetAll()
     {
         return await bankDbContext.Clients
-            .Include(a => a.accounts)
+            // .Include(a => a.accounts)
             .ToListAsync();
     }
     
