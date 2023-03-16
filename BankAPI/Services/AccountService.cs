@@ -16,7 +16,10 @@ public class AccountService
 
     public async Task<IEnumerable<Account>> GetAll()
     {
-        return await bankDbContext.Accounts.ToListAsync();
+        return await bankDbContext.Accounts
+            .Include(c => c.client)
+            .Include(b => b.bank)
+            .ToListAsync();
     }
 
     public async Task<Account?> GetById(Guid id)

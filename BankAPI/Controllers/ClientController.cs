@@ -36,8 +36,11 @@ public class ClientController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Client>> Create(Client client)
     {
-        var newClient = await clientService.Create(client);
-        return  CreatedAtAction(nameof(GetById), new { id = newClient.docNumber}, newClient);
+        if(await clientService.GetById(client.docNumber) is null){
+            var newClient = await clientService.Create(client);
+            return  CreatedAtAction(nameof(GetById), new { id = newClient.docNumber}, newClient);
+        }
+        return BadRequest(new { message = $"El cliente con numero de documento ({client.docNumber}) ya existe en la base de datos!"});
     }
 
     [HttpPut("{id}")]

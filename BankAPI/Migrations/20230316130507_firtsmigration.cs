@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BankAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class firstmigration : Migration
+    public partial class firtsmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,15 +47,16 @@ namespace BankAPI.Migrations
                     currency = table.Column<string>(type: "text", nullable: true),
                     balance = table.Column<decimal>(type: "numeric", nullable: false),
                     docNumber = table.Column<string>(type: "text", nullable: true),
-                    bankId = table.Column<Guid>(type: "uuid", nullable: true),
-                    clientdocNumber = table.Column<string>(type: "text", nullable: true)
+                    bankCode = table.Column<string>(type: "text", nullable: true),
+                    clientdocNumber = table.Column<string>(type: "text", nullable: true),
+                    bankid = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Accounts", x => x.id_account);
                     table.ForeignKey(
-                        name: "FK_Accounts_Banks_bankId",
-                        column: x => x.bankId,
+                        name: "FK_Accounts_Banks_bankid",
+                        column: x => x.bankid,
                         principalTable: "Banks",
                         principalColumn: "id");
                     table.ForeignKey(
@@ -94,9 +95,9 @@ namespace BankAPI.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Accounts_bankId",
+                name: "IX_Accounts_bankid",
                 table: "Accounts",
-                column: "bankId");
+                column: "bankid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_clientdocNumber",

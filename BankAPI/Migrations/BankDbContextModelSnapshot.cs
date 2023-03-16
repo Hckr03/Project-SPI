@@ -24,7 +24,7 @@ namespace BankAPI.Migrations
 
             modelBuilder.Entity("BankAPI.Models.Account", b =>
                 {
-                    b.Property<Guid?>("id_account")
+                    b.Property<Guid>("id_account")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -34,7 +34,10 @@ namespace BankAPI.Migrations
                     b.Property<decimal>("balance")
                         .HasColumnType("numeric");
 
-                    b.Property<Guid?>("bankId")
+                    b.Property<string>("bankCode")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("bankid")
                         .HasColumnType("uuid");
 
                     b.Property<string>("clientdocNumber")
@@ -48,7 +51,7 @@ namespace BankAPI.Migrations
 
                     b.HasKey("id_account");
 
-                    b.HasIndex("bankId");
+                    b.HasIndex("bankid");
 
                     b.HasIndex("clientdocNumber");
 
@@ -130,11 +133,11 @@ namespace BankAPI.Migrations
             modelBuilder.Entity("BankAPI.Models.Account", b =>
                 {
                     b.HasOne("BankAPI.Models.Bank", "bank")
-                        .WithMany("Accounts")
-                        .HasForeignKey("bankId");
+                        .WithMany("accounts")
+                        .HasForeignKey("bankid");
 
                     b.HasOne("BankAPI.Models.Client", "client")
-                        .WithMany("Accounts")
+                        .WithMany("accounts")
                         .HasForeignKey("clientdocNumber");
 
                     b.Navigation("bank");
@@ -145,11 +148,11 @@ namespace BankAPI.Migrations
             modelBuilder.Entity("BankAPI.Models.Transfer", b =>
                 {
                     b.HasOne("BankAPI.Models.Account", "account")
-                        .WithMany("Transfers")
+                        .WithMany("transfers")
                         .HasForeignKey("accountid_account");
 
                     b.HasOne("BankAPI.Models.Client", "client")
-                        .WithMany("Transfers")
+                        .WithMany("transfers")
                         .HasForeignKey("clientdocNumber");
 
                     b.Navigation("account");
@@ -159,19 +162,19 @@ namespace BankAPI.Migrations
 
             modelBuilder.Entity("BankAPI.Models.Account", b =>
                 {
-                    b.Navigation("Transfers");
+                    b.Navigation("transfers");
                 });
 
             modelBuilder.Entity("BankAPI.Models.Bank", b =>
                 {
-                    b.Navigation("Accounts");
+                    b.Navigation("accounts");
                 });
 
             modelBuilder.Entity("BankAPI.Models.Client", b =>
                 {
-                    b.Navigation("Accounts");
+                    b.Navigation("accounts");
 
-                    b.Navigation("Transfers");
+                    b.Navigation("transfers");
                 });
 #pragma warning restore 612, 618
         }

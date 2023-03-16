@@ -10,7 +10,7 @@ public class Transfer
 
     //se supone son mi FK
     public string? accountNum {get; set;}
-    public string? docNumber { get; set; }
+    public String? docNumber { get; set; }
     //hasta aqui se define los FK
 
     public DateTime date { get; set; }
@@ -18,8 +18,6 @@ public class Transfer
     public string? state { get; set; }
 
     //relacion entre entity
-    [JsonIgnore]
     public virtual Account? account { get; set; }
-    [JsonIgnore]
     public virtual Client? client { get; set; }
 }
