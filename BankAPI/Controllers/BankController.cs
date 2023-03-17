@@ -12,9 +12,11 @@ namespace BankAPI.Controllers;
 public class BankController : ControllerBase
 {
     private readonly BankService bankService;
-    public BankController(BankService bankService)
+    private readonly AccountService accountService;
+    public BankController(BankService bankService, AccountService accountService)
     {
         this.bankService = bankService;
+        this.accountService = accountService;
     }
 
     [HttpGet]

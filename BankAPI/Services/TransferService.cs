@@ -2,6 +2,7 @@
 
 using BankAPI.Data;
 using BankAPI.Models;
+using BankAPI.Models.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankAPI.Services;
@@ -17,7 +18,10 @@ public class TransferService
 
     public async Task<IEnumerable<Transfer>> GetALL()
     {
-        return await bankDbContext.Transfers.ToListAsync();
+        return await bankDbContext.Transfers
+            // .Include(a => a.Account)
+            // .Include(c => c.Client)
+            .ToListAsync();
     }
 
     public async Task<Transfer?> GetById(Guid id)
@@ -25,24 +29,25 @@ public class TransferService
         return await bankDbContext.Transfers.FindAsync();
     }
 
-    public async Task<Transfer> Create(Transfer newTransfer)
+    public async Task<Account?> GetByNum(string accountNum)
     {
-        bankDbContext.Transfers.Add(newTransfer);
-        await bankDbContext.SaveChangesAsync();
-
-        return newTransfer;
+        return await bankDbContext.Accounts
+        .FirstOrDefaultAsync(a => a.AccountNum.ToLower() == accountNum.ToLower());
     }
 
-    public async Task Update(Guid id, Transfer transfer)
+    public async Task<Transfer> Send(Transfer transfer)
+    {
+        bankDbContext.Transfers.Add(transfer);
+        await bankDbContext.SaveChangesAsync();
+        return transfer;
+    }
+
+    public async Task UpdateState(Guid id, Transfer transfer)
     {
         var existingTransfer = await GetById(id);
         if(existingTransfer is not null)
         {
-            existingTransfer.ClientDocNumber = transfer.ClientDocNumber;
-            existingTransfer.Account = transfer.Account;
-            existingTransfer.AccountNum = transfer.AccountNum;
-            existingTransfer.Amount = transfer.Amount;
-            
+            existingTransfer.State = transfer.State;
             await bankDbContext.SaveChangesAsync();
         }
     }

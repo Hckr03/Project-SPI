@@ -1,4 +1,5 @@
 using BankAPI.Models;
+using BankAPI.Models.Dtos;
 using BankAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,19 @@ namespace BankAPI.Controllers;
 public class TransferController : ControllerBase
 {
     private readonly TransferService transferService;
+    private readonly AccountService accountService;
+    private readonly ClientService clientService;
+    private readonly BankService bankService;
 
-    public TransferController(TransferService transferService)
+    public TransferController(TransferService transferService, 
+        AccountService accountService, 
+        ClientService clientService,
+        BankService bankService)
     {
         this.transferService = transferService;
+        this.accountService = accountService;
+        this.clientService = clientService;
+        this.bankService = bankService;
     }
 
     [HttpGet]
@@ -33,14 +43,34 @@ public class TransferController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Transfer>> Create(Transfer transfer)
+    public async Task<ActionResult<Transfer>> Send(TransferDtoIn transfer)
     {
-        var newTransfer = await transferService.Create(transfer);
+        Account fromAccount = await accountService.GetByNum(transfer.FromAccountNum);
+        Client fromClient = await clientService.GetByNum(transfer.FromClientDocNumber);
+        Bank fromBank = await bankService.GetByCode(transfer.FromBank);
+
+
+        Account toAccount = await accountService.GetByNum(transfer.ToAccountNum);
+        Client toClient = await clientService.GetByNum(transfer.ToClientDocNumber);
+        Bank toBank = await bankService.GetByCode(transfer.FromBank);
+
+
+        Transfer newTransfer = new Transfer();
+        newTransfer.FromAccount = fromAccount;
+        newTransfer.FromClient = fromClient;
+        newTransfer.FromBank = fromBank;  
+        newTransfer.Amount = transfer.Amount;
+        newTransfer.ToAccount = toAccount;
+        newTransfer.ToClient = toClient;
+        newTransfer.ToBank = toBank;
+        newTransfer.State = transfer.State;
+
+        await transferService.Send(newTransfer);
         return CreatedAtAction(nameof(GetById), new { id = newTransfer.Id}, newTransfer);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Transfer>> Update(Guid id, Transfer transfer)
+    public async Task<ActionResult<Transfer>> UpdateState(Guid id, Transfer transfer)
     {
         if(id != transfer.Id)
         {
@@ -50,7 +80,7 @@ public class TransferController : ControllerBase
         var transferToUpdate = await transferService.GetById(id);
         if(transferToUpdate is not null)
         {
-            await transferService.Update(id, transfer);
+            await transferService.UpdateState(id, transfer);
             return NoContent();
         }
         else

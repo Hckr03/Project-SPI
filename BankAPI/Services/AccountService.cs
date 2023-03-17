@@ -21,8 +21,8 @@ public class AccountService
     public async Task<IEnumerable<Account>> GetAll()
     {
         return await bankDbContext.Accounts
-            .Include(a => a.Client)
-            .Include(a => a.Bank)
+            // .Include(a => a.Client)
+            // .Include(a => a.Bank)
             .ToListAsync();
 
         // return await bankDbContext.Accounts.Select( a => new AccountDtoOut {
@@ -41,31 +41,35 @@ public class AccountService
         return await bankDbContext.Accounts.FindAsync(id);
     }
 
-    public async Task<Account> Create(AccountDtoIn account)
+    public async Task<Account?> GetByNum(string accountNum)
     {
-         var newAccount = new Account(
-            account.AccountNum,
-            account.Currency,
-            account.Balance,
-            account.ClientDocNumber,
-            account.BankId
-        );
-        
-        bankDbContext.Accounts.Add(newAccount);
-        await bankDbContext.SaveChangesAsync();
-        return newAccount;
+        return await bankDbContext.Accounts
+        .FirstOrDefaultAsync(b => b.AccountNum.ToLower() == accountNum.ToLower());
     }
 
-    public async Task Update(Guid id, AccountDtoIn account)
+    public async Task<Bank?> GetByCode(String code)
+    {
+        return await bankDbContext.Banks
+        .FirstOrDefaultAsync(b => b.BankCode.ToLower() == code.ToLower());
+    }
+
+    public async Task<Account> Create(Account account)
+    {
+        bankDbContext.Accounts.Add(account);
+        await bankDbContext.SaveChangesAsync();
+        return account;
+    }
+
+    public async Task Update(Guid id, Account account)
     {
         var existingAccount = await GetById(id);
         if(existingAccount is not null)
         {
             existingAccount.AccountNum = account.AccountNum;
             existingAccount.Balance = account.Balance;
-            existingAccount.BankId = account.BankId;
-            existingAccount.ClientDocNumber = account.ClientDocNumber;
             existingAccount.Currency = account.Currency;
+            existingAccount.Client = account.Client;
+            existingAccount.Bank = account.Bank;
 
             await bankDbContext.SaveChangesAsync();
         }

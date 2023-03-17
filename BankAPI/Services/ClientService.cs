@@ -19,17 +19,9 @@ public class ClientService
     public async Task<IEnumerable<Client>> GetAll()
     {
         return await bankDbContext.Clients
-            .Include(a => a.Accounts)
-            .Include(t => t.Transfers)
+            // .Include(a => a.Accounts)
+            // .Include(t => t.Transfers)
             .ToListAsync();
-
-        // return await bankDbContext.Clients.Select( c => new ClientDtoOut {
-        //     DocNumber = c.DocNumber,
-        //     DocType = c.DocType,
-        //     Fullname = c.Fullname,
-        //     Accounts = c.Accounts,
-        //     Transfers = c.Transfers
-        // }).ToListAsync();
     }
     
     public async Task<Client?> GetById(string id)
@@ -37,21 +29,21 @@ public class ClientService
         return await bankDbContext.Clients.FindAsync(id);
     }
 
-     public async Task<Client> Create(ClientDtoIn client)
+        public async Task<Client?> GetByNum(string docNum)
     {
-        var newClient = new Client(
-            client.DocNumber,
-            client.DocType,
-            client.Fullname
-        );
-
-        bankDbContext.Clients.Add(newClient);
-        await bankDbContext.SaveChangesAsync();
-
-        return newClient;
+        return await bankDbContext.Clients
+        .FirstOrDefaultAsync(b => b.DocNumber.ToLower() == docNum.ToLower());
     }
 
-     public async Task Update(String id, ClientDtoIn client)
+     public async Task<Client> Create(Client client)
+    {
+        bankDbContext.Clients.Add(client);
+        await bankDbContext.SaveChangesAsync();
+
+        return client;
+    }
+
+     public async Task Update(String id, Client client)
     {
         var existingClient = await GetById(id);
 

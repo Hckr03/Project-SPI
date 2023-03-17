@@ -7,27 +7,24 @@ public class Account
 {
     [Key]
     public Guid Id {get; set;}
-    public string AccountNum {get; set;}
-    public string Currency { get; set; }
+    public string AccountNum { get; set; }  = string.Empty;
+    public string Currency { get; set; }  = string.Empty;
     public decimal Balance { get; set; }
-    
-    //se supone son mi FK
-    public string ClientDocNumber { get; set; }
-    public Guid? BankId { get; set; }
-    //hasta aqui se define los FK
-
     //relaciones entre entities
-    public Client Client { get; set; }
-    public Bank Bank { get; set; }
-    public ICollection<Transfer> Transfers { get; set; }
+    public Client Client { get; set; } = new Client();
+    public Bank Bank { get; set; } = new Bank();
 
-    public Account(string accountNumber, string currency, decimal balance, string clientDocNumber, Guid bankId)
+    public Account(string accounNum,
+        string currency,
+        decimal balance,
+        Client client,
+        Bank bank)
     {
-        AccountNum = accountNumber;
+        AccountNum = accounNum;
         Currency = currency;
         Balance = balance;
-        ClientDocNumber = clientDocNumber;
-        BankId = bankId;
+        Client = client;
+        Bank = bank;
     }
 
     public Account(){}

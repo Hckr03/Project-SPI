@@ -35,7 +35,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Client>> Create(ClientDtoIn client)
+    public async Task<ActionResult<Client>> Create(Client client)
     {
         if(await clientService.GetById(client.DocNumber) is null)
         {
@@ -46,7 +46,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Client>> Update(String id, ClientDtoIn client)
+    public async Task<ActionResult<Client>> Update(String id, Client client)
     {
         if(id != client.DocNumber)
         {
@@ -63,7 +63,6 @@ public class ClientController : ControllerBase
         {
             return ClientNotFound(id);
         }
-        
     }
 
     [HttpDelete]

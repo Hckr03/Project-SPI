@@ -10,10 +10,13 @@ namespace BankAPI.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly AccountService accountService;
+    private readonly ClientService clientService;
+    private readonly BankService bankService;
 
-    public AccountController(AccountService accountService)
+    public AccountController(AccountService accountService, ClientService clientService)
     {
         this.accountService = accountService;
+        this.clientService = clientService;
     }
 
     [HttpGet]
@@ -36,7 +39,17 @@ public class AccountController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Account>> Create(AccountDtoIn account)
     {
-        var newAccount = await accountService.Create(account);
+        Client newClient = await clientService.GetByNum(account.ClientDocNumber);
+        Bank newBank = await accountService.GetByCode(account.BankCode);
+
+        var newAccount = new Account();
+            newAccount.AccountNum = account.AccountNum;
+            newAccount.Currency = account.Currency;
+            newAccount.Balance = account.Balance;
+            newAccount.Client = newClient;
+            newAccount.Bank = newBank;
+
+        await accountService.Create(newAccount);
         return CreatedAtAction(nameof(GetById), new { id = newAccount.Id}, newAccount);
     }
 
@@ -49,9 +62,20 @@ public class AccountController : ControllerBase
         }
 
         var accountToUpdate = await accountService.GetById(id);
+
         if(accountToUpdate is not null)
         {
-            await accountService.Update(id, account);
+            Client newClient = await clientService.GetByNum(account.ClientDocNumber);
+            Bank newBank = await bankService.GetByCode(account.BankCode);
+
+            var newAccount = new Account();
+                newAccount.AccountNum = account.AccountNum;
+                newAccount.Currency = account.Currency;
+                newAccount.Balance = account.Balance;
+                newAccount.Client = newClient;
+                newAccount.Bank = newBank;
+
+            await accountService.Update(id, newAccount);
             return NoContent();
         }
         else
