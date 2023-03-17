@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BankAPI.Services;
 using BankAPI.Models;
+using BankAPI.Models.Dtos;
 
 namespace BankAPI.Controllers;
 
@@ -22,17 +23,6 @@ public class BankController : ControllerBase
         return await bankService.GetAll();
     }
 
-    // [HttpGet("{id}")]
-    // public async Task<ActionResult<Bank>> GetById(Guid id)
-    // {
-    //     var bank = await bankService.GetById(id);
-    //     if(bank is null)
-    //     {
-    //         return NotFound(new { message = "El ID = ({id}) no existe!"});
-    //     }
-    //     return bank;
-    // }
-
     [HttpGet("{code}")]
     public async Task<ActionResult<Bank>> GetByCode(String code)
     {
@@ -45,22 +35,22 @@ public class BankController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Bank>> Create(Bank bank)
+    public async Task<ActionResult<Bank>> Create(BankDtoIn bank)
     {
-        if(await bankService.GetByCode(bank.bankCode) is not null)
+        if(await bankService.GetByCode(bank.BankCode) is not null)
         {
-            return BadRequest(new {message = $"El codigo de banco ({bank.bankCode}) ya existe!"});
+            return BadRequest(new {message = $"El codigo de banco ({bank.BankCode}) ya existe!"});
         }
         var newBank = await bankService.Create(bank);
-        return  CreatedAtAction(nameof(GetByCode), new { code = newBank.bankCode}, newBank);
+        return  CreatedAtAction(nameof(GetByCode), new { code = newBank.BankCode}, newBank);
     }
 
     [HttpPut("{code}")]
-    public async Task<ActionResult<Bank>> Update(String code, Bank bank)
+    public async Task<ActionResult<Bank>> Update(String code, BankDtoIn bank)
     {
-        if(code != bank.bankCode)
+        if(code != bank.BankCode)
         {
-            return BadRequest(new { message = $"El nro del Banco({code}) de la URL no coincide con el nro. del Banco({bank.bankCode}) del cuerpo de la solicitud."});
+            return BadRequest(new { message = $"El nro del Banco({code}) de la URL no coincide con el nro. del Banco({bank.BankCode}) del cuerpo de la solicitud."});
         }
 
         var bankToUpdate = await bankService.GetByCode(code);

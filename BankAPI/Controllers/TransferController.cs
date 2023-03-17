@@ -36,15 +36,15 @@ public class TransferController : ControllerBase
     public async Task<ActionResult<Transfer>> Create(Transfer transfer)
     {
         var newTransfer = await transferService.Create(transfer);
-        return CreatedAtAction(nameof(GetById), new { id = newTransfer.id_transaction}, newTransfer);
+        return CreatedAtAction(nameof(GetById), new { id = newTransfer.Id}, newTransfer);
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult<Transfer>> Update(Guid id, Transfer transfer)
     {
-        if(id != transfer.id_transaction)
+        if(id != transfer.Id)
         {
-            return BadRequest(new { message = $"El nro de transferencia({id}) de la URL no coincide con el nro de transferencia({transfer.id_transaction}) del cuerpo de la solicitud."});
+            return BadRequest(new { message = $"El nro de transferencia({id}) de la URL no coincide con el nro de transferencia({transfer.Id}) del cuerpo de la solicitud."});
         }
 
         var transferToUpdate = await transferService.GetById(id);

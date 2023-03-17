@@ -1,5 +1,6 @@
 using BankAPI.Data;
 using BankAPI.Models;
+using BankAPI.Models.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankAPI.Services;
@@ -18,8 +19,17 @@ public class ClientService
     public async Task<IEnumerable<Client>> GetAll()
     {
         return await bankDbContext.Clients
-            // .Include(a => a.accounts)
+            .Include(a => a.Accounts)
+            .Include(t => t.Transfers)
             .ToListAsync();
+
+        // return await bankDbContext.Clients.Select( c => new ClientDtoOut {
+        //     DocNumber = c.DocNumber,
+        //     DocType = c.DocType,
+        //     Fullname = c.Fullname,
+        //     Accounts = c.Accounts,
+        //     Transfers = c.Transfers
+        // }).ToListAsync();
     }
     
     public async Task<Client?> GetById(string id)
@@ -27,23 +37,29 @@ public class ClientService
         return await bankDbContext.Clients.FindAsync(id);
     }
 
-     public async Task<Client> Create(Client newClient)
+     public async Task<Client> Create(ClientDtoIn client)
     {
+        var newClient = new Client(
+            client.DocNumber,
+            client.DocType,
+            client.Fullname
+        );
+
         bankDbContext.Clients.Add(newClient);
         await bankDbContext.SaveChangesAsync();
 
         return newClient;
     }
 
-     public async Task Update(String id, Client client)
+     public async Task Update(String id, ClientDtoIn client)
     {
         var existingClient = await GetById(id);
 
         if (existingClient is not null)
         {
-            existingClient.name = client.name;
-            existingClient.docType = client.docType;
-            existingClient.docNumber = client.docNumber;
+            existingClient.Fullname = client.Fullname;
+            existingClient.DocNumber = client.DocNumber;
+            existingClient.DocType = client.DocType;
 
             await bankDbContext.SaveChangesAsync();
         }

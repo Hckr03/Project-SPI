@@ -5,19 +5,18 @@ namespace BankAPI.Models;
 
 public class Client
 {
-    public Client()
-    {
-        this.accounts = new HashSet<Account?>();
-        this.transfers = new HashSet<Transfer?>();
-    }
-
     [Key]
-    public string? docNumber {get; set;}
-    public string? docType {get; set;}
-    public string? name { get; set; }
+    public string DocNumber {get; set;}
+    public string DocType {get; set;}
+    public string Fullname { get; set; }
 
-    [JsonIgnore]
-    public virtual ICollection<Account?> accounts { get; set; }
-    [JsonIgnore]
-    public virtual ICollection<Transfer?> transfers { get; set; }
+    public ICollection<Account> Accounts { get; set; }
+    public ICollection<Transfer> Transfers { get; set; }
+
+    public Client(string docNumber, string docType, string fullname)
+    {
+        DocNumber = docNumber;
+        DocType = docType;
+        Fullname = fullname;
+    }
 }

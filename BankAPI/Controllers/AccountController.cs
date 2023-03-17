@@ -34,18 +34,18 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Account>> Create(Account account)
+    public async Task<ActionResult<Account>> Create(AccountDtoIn account)
     {
         var newAccount = await accountService.Create(account);
-        return CreatedAtAction(nameof(GetById), new { id = newAccount.id_account}, newAccount);
+        return CreatedAtAction(nameof(GetById), new { id = newAccount.Id}, newAccount);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Account>> Update(Guid id, Account account)
+    public async Task<ActionResult<Account>> Update(Guid id, AccountDtoIn account)
     {
-        if(id != account.id_account)
+        if(id != account.Id)
         {
-            return BadRequest(new { message = $"El nro de cuenta({id}) de la URL no coincide con el nro de cuenta({account.id_account}) del cuerpo de la solicitud."});
+            return BadRequest(new { message = $"El nro de cuenta({id}) de la URL no coincide con el nro de cuenta({account.Id}) del cuerpo de la solicitud."});
         }
 
         var accountToUpdate = await accountService.GetById(id);

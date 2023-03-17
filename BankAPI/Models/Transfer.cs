@@ -6,18 +6,31 @@ namespace BankAPI.Models;
 public class Transfer
 {
     [Key]
-    public Guid? id_transaction {get; set;}
+    public Guid Id {get; set;}
 
     //se supone son mi FK
-    public string? accountNum {get; set;}
-    public string? docNumber { get; set; }
+    public string AccountNum {get; set;}
+    public string ClientDocNumber { get; set; }
     //hasta aqui se define los FK
 
-    public DateTime date { get; set; }
-    public decimal amount { get; set; }
-    public string? state { get; set; }
+    public DateTime Date { get; set; }
+    public decimal Amount { get; set; }
+    public string State { get; set; }
 
     //relacion entre entity
-    public virtual Account? account { get; set; }
-    public virtual Client? client { get; set; }
+    [JsonIgnore]
+    public virtual Account Account { get; set; }
+    [JsonIgnore]
+    public virtual Client Client { get; set; }
+
+    public Transfer(string accountNumber, string clientDocNumber, DateTime date, decimal amount, string state)
+    {
+        AccountNum = accountNumber;
+        ClientDocNumber = clientDocNumber;
+        Date = date;
+        Amount = amount;
+        State = state;
+    }
+
+    public Transfer(){}
 }

@@ -21,9 +21,19 @@ public class AccountService
     public async Task<IEnumerable<Account>> GetAll()
     {
         return await bankDbContext.Accounts
-            .Include(a => a.client)
-            .Include(a => a.bank)
+            .Include(a => a.Client)
+            .Include(a => a.Bank)
             .ToListAsync();
+
+        // return await bankDbContext.Accounts.Select( a => new AccountDtoOut {
+        //     Id = a.Id,
+        //     AccountNum = a.AccountNum,
+        //     Currency = a.Currency,
+        //     Balance = a.Balance,
+        //     Client = a.Client,
+        //     Bank = a.Bank,
+        //     Transfers = a.Transfers
+        // }).ToListAsync();
     }
 
     public async Task<Account?> GetById(Guid id)
@@ -31,31 +41,31 @@ public class AccountService
         return await bankDbContext.Accounts.FindAsync(id);
     }
 
-    public async Task<Account> Create(Account newAccount)
+    public async Task<Account> Create(AccountDtoIn account)
     {
-        // var newAccount = new Account();
-        // newAccount.accountNum = account.accountNum;
-        // newAccount.currency = account.currency;
-        // newAccount.balance = account.balance;
-        // newAccount.docNumber = account.docNumber;
-        // newAccount.bankCode = account.bankCode;
-
+         var newAccount = new Account(
+            account.AccountNum,
+            account.Currency,
+            account.Balance,
+            account.ClientDocNumber,
+            account.BankId
+        );
+        
         bankDbContext.Accounts.Add(newAccount);
         await bankDbContext.SaveChangesAsync();
-
         return newAccount;
     }
 
-    public async Task Update(Guid id, Account account)
+    public async Task Update(Guid id, AccountDtoIn account)
     {
         var existingAccount = await GetById(id);
         if(existingAccount is not null)
         {
-            existingAccount.accountNum = account.accountNum;
-            existingAccount.balance = account.balance;
-            existingAccount.bankCode = account.bankCode;
-            existingAccount.docNumber = account.docNumber;
-            existingAccount.currency = account.currency;
+            existingAccount.AccountNum = account.AccountNum;
+            existingAccount.Balance = account.Balance;
+            existingAccount.BankId = account.BankId;
+            existingAccount.ClientDocNumber = account.ClientDocNumber;
+            existingAccount.Currency = account.Currency;
 
             await bankDbContext.SaveChangesAsync();
         }

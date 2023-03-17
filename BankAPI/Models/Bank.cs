@@ -5,19 +5,20 @@ namespace BankAPI.Models;
 
 public class Bank
 {   
-    //asi se crea la relacion 1 a varios
-    //luego en el constructor se crea un HashSet del tipo de la clase
-    public Bank(){
-        this.accounts = new HashSet<Account>();
+    [Key]
+    public Guid Id { get ; set;}
+    public string BankCode {get; set;}
+    public string Fullname {get; set;}
+    public string Adress { get; set; }
+
+    public ICollection<Account> Accounts {get; set;}
+
+    public Bank( string bankCode, string fullname, string adress)
+    {
+        BankCode = bankCode;
+        Fullname = fullname;
+        Adress = adress;
     }
 
-    [Key]
-    public Guid id { get ; set;}
-    public string? bankCode {get; set;}
-    public string? name {get; set;}
-    public string? adress { get; set; }
-
-    //relacion entre entity
-    [JsonIgnore]
-    public virtual ICollection<Account> accounts {get; set;}
+    public Bank(){}
 }

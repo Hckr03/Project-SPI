@@ -38,10 +38,10 @@ public class TransferService
         var existingTransfer = await GetById(id);
         if(existingTransfer is not null)
         {
-            existingTransfer.docNumber = transfer.docNumber;
-            existingTransfer.account = transfer.account;
-            existingTransfer.accountNum = transfer.accountNum;
-            existingTransfer.amount = transfer.amount;
+            existingTransfer.ClientDocNumber = transfer.ClientDocNumber;
+            existingTransfer.Account = transfer.Account;
+            existingTransfer.AccountNum = transfer.AccountNum;
+            existingTransfer.Amount = transfer.Amount;
             
             await bankDbContext.SaveChangesAsync();
         }

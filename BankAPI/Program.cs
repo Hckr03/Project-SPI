@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using BankAPI.Data;
 using BankAPI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //nuevos services
+builder.Services.AddControllers().AddJsonOptions(opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddScoped<ClientService>();
 builder.Services.AddScoped<BankService>();
 builder.Services.AddScoped<AccountService>();

@@ -5,25 +5,30 @@ namespace BankAPI.Models;
 
 public class Account
 {
-    public Account()
-    {
-        this.transfers = new HashSet<Transfer>();
-    }
-
     [Key]
-    public Guid id_account {get; set;}
-    public string? accountNum {get; set;}
-    public string? currency { get; set; }
-    public decimal balance { get; set; }
+    public Guid Id {get; set;}
+    public string AccountNum {get; set;}
+    public string Currency { get; set; }
+    public decimal Balance { get; set; }
     
     //se supone son mi FK
-    public string? docNumber { get; set; }
-    public string? bankCode { get; set; }
+    public string ClientDocNumber { get; set; }
+    public Guid? BankId { get; set; }
     //hasta aqui se define los FK
 
     //relaciones entre entities
-    public virtual Client? client { get; set; }
-    public virtual Bank? bank { get; set; }
-    [JsonIgnore]
-    public virtual ICollection<Transfer> transfers { get; set; }
+    public Client Client { get; set; }
+    public Bank Bank { get; set; }
+    public ICollection<Transfer> Transfers { get; set; }
+
+    public Account(string accountNumber, string currency, decimal balance, string clientDocNumber, Guid bankId)
+    {
+        AccountNum = accountNumber;
+        Currency = currency;
+        Balance = balance;
+        ClientDocNumber = clientDocNumber;
+        BankId = bankId;
+    }
+
+    public Account(){}
 }

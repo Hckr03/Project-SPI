@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BankAPI.Services;
 using BankAPI.Models;
+using BankAPI.Models.Dtos;
 
 namespace BankAPI.Controllers;
 
@@ -34,22 +35,22 @@ public class ClientController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Client>> Create(Client client)
+    public async Task<ActionResult<Client>> Create(ClientDtoIn client)
     {
-        if(await clientService.GetById(client.docNumber) is null)
+        if(await clientService.GetById(client.DocNumber) is null)
         {
             var newClient = await clientService.Create(client);
-            return CreatedAtAction(nameof(GetById), new { id = newClient.docNumber}, newClient);
+            return CreatedAtAction(nameof(GetById), new { id = newClient.DocNumber}, newClient);
         }
-        return BadRequest(new { message = $"El cliente con numero de documento ({client.docNumber}) ya existe en la base de datos!"});
+        return BadRequest(new { message = $"El cliente con numero de documento ({client.DocNumber}) ya existe en la base de datos!"});
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Client>> Update(String id, Client client)
+    public async Task<ActionResult<Client>> Update(String id, ClientDtoIn client)
     {
-        if(id != client.docNumber)
+        if(id != client.DocNumber)
         {
-            return BadRequest(new { message = $"El nro de documento({id}) de la URL no coincide con el nro. de documento({client.docNumber}) del cuerpo de la solicitud."});
+            return BadRequest(new { message = $"El nro de documento({id}) de la URL no coincide con el nro. de documento({client.DocNumber}) del cuerpo de la solicitud."});
         }
 
         var clientToUpdate = await clientService.GetById(id);

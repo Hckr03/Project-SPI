@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BankAPI.Migrations
 {
     [DbContext(typeof(BankDbContext))]
-    [Migration("20230316195212_firstmigration")]
+    [Migration("20230317033149_firstmigration")]
     partial class firstmigration
     {
         /// <inheritdoc />
@@ -27,150 +27,158 @@ namespace BankAPI.Migrations
 
             modelBuilder.Entity("BankAPI.Models.Account", b =>
                 {
-                    b.Property<Guid>("id_account")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("accountNum")
+                    b.Property<string>("AccountNum")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<decimal>("balance")
+                    b.Property<decimal>("Balance")
                         .HasColumnType("numeric");
 
-                    b.Property<string>("bankCode")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("bankid")
+                    b.Property<Guid?>("BankId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("clientdocNumber")
+                    b.Property<string>("ClientDocNumber")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("currency")
+                    b.Property<string>("Currency")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("docNumber")
-                        .HasColumnType("text");
+                    b.HasKey("Id");
 
-                    b.HasKey("id_account");
+                    b.HasIndex("BankId");
 
-                    b.HasIndex("bankid");
-
-                    b.HasIndex("clientdocNumber");
+                    b.HasIndex("ClientDocNumber");
 
                     b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("BankAPI.Models.Bank", b =>
                 {
-                    b.Property<Guid>("id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("adress")
+                    b.Property<string>("Adress")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("bankCode")
+                    b.Property<string>("BankCode")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("name")
+                    b.Property<string>("Fullname")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("Banks");
                 });
 
             modelBuilder.Entity("BankAPI.Models.Client", b =>
                 {
-                    b.Property<string>("docNumber")
+                    b.Property<string>("DocNumber")
                         .HasColumnType("text");
 
-                    b.Property<string>("docType")
+                    b.Property<string>("DocType")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("name")
+                    b.Property<string>("Fullname")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("docNumber");
+                    b.HasKey("DocNumber");
 
                     b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("BankAPI.Models.Transfer", b =>
                 {
-                    b.Property<Guid?>("id_transaction")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("accountNum")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("accountid_account")
+                    b.Property<Guid>("AccountId")
                         .HasColumnType("uuid");
 
-                    b.Property<decimal>("amount")
+                    b.Property<string>("AccountNum")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<string>("clientdocNumber")
+                    b.Property<string>("ClientDocNumber")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("date")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("docNumber")
+                    b.Property<string>("State")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("state")
-                        .HasColumnType("text");
+                    b.HasKey("Id");
 
-                    b.HasKey("id_transaction");
+                    b.HasIndex("AccountId");
 
-                    b.HasIndex("accountid_account");
-
-                    b.HasIndex("clientdocNumber");
+                    b.HasIndex("ClientDocNumber");
 
                     b.ToTable("Transfers");
                 });
 
             modelBuilder.Entity("BankAPI.Models.Account", b =>
                 {
-                    b.HasOne("BankAPI.Models.Bank", "bank")
+                    b.HasOne("BankAPI.Models.Bank", "Bank")
+                        .WithMany("Accounts")
+                        .HasForeignKey("BankId");
+
+                    b.HasOne("BankAPI.Models.Client", "Client")
                         .WithMany("accounts")
-                        .HasForeignKey("bankid");
+                        .HasForeignKey("ClientDocNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("BankAPI.Models.Client", "client")
-                        .WithMany("accounts")
-                        .HasForeignKey("clientdocNumber");
+                    b.Navigation("Bank");
 
-                    b.Navigation("bank");
-
-                    b.Navigation("client");
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("BankAPI.Models.Transfer", b =>
                 {
-                    b.HasOne("BankAPI.Models.Account", "account")
+                    b.HasOne("BankAPI.Models.Account", "Account")
+                        .WithMany("Transfers")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BankAPI.Models.Client", "Client")
                         .WithMany("transfers")
-                        .HasForeignKey("accountid_account");
+                        .HasForeignKey("ClientDocNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("BankAPI.Models.Client", "client")
-                        .WithMany("transfers")
-                        .HasForeignKey("clientdocNumber");
+                    b.Navigation("Account");
 
-                    b.Navigation("account");
-
-                    b.Navigation("client");
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("BankAPI.Models.Account", b =>
                 {
-                    b.Navigation("transfers");
+                    b.Navigation("Transfers");
                 });
 
             modelBuilder.Entity("BankAPI.Models.Bank", b =>
                 {
-                    b.Navigation("accounts");
+                    b.Navigation("Accounts");
                 });
 
             modelBuilder.Entity("BankAPI.Models.Client", b =>
