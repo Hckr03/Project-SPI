@@ -22,7 +22,7 @@ public class BankService
         // .where(a => a.bankCode == bankDbContext.Transfers.bankCode)
     }
     
-    public async Task<Bank?> GetByCode(String code)
+    public async Task<Bank> GetByCode(String code)
     {
         return await bankDbContext.Banks
         .FirstOrDefaultAsync(b => b.BankCode.ToLower() == code.ToLower());

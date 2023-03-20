@@ -45,26 +45,23 @@ public class TransferController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Transfer>> Send(TransferDtoIn transfer)
     {
-        Account fromAccount = await accountService.GetByNum(transfer.FromAccountNum);
-        Client fromClient = await clientService.GetByNum(transfer.FromClientDocNumber);
-        Bank fromBank = await bankService.GetByCode(transfer.FromBank);
+        if(valNullEmpty(transfer))
+        {
+            return BadRequest(new { message = "El formulario de transferencias posee campos vacios o nulos"});
+        }
 
+        if(await insufficientBalance(transfer))
+        {
+            return BadRequest(new { message = "El saldo es insuficiente para realizar esta operación"});
+        }
+        
+        if(await banksEquals(transfer))
+        {
+            return BadRequest(new { message = "No se puede realizar esta operacion debido a que ambas cuentas son del mismo Banco"});
+        }
 
-        Account toAccount = await accountService.GetByNum(transfer.ToAccountNum);
-        Client toClient = await clientService.GetByNum(transfer.ToClientDocNumber);
-        Bank toBank = await bankService.GetByCode(transfer.FromBank);
-
-
-        Transfer newTransfer = new Transfer();
-        newTransfer.FromAccount = fromAccount;
-        newTransfer.FromClient = fromClient;
-        newTransfer.FromBank = fromBank;  
-        newTransfer.Amount = transfer.Amount;
-        newTransfer.ToAccount = toAccount;
-        newTransfer.ToClient = toClient;
-        newTransfer.ToBank = toBank;
-        newTransfer.State = transfer.State;
-
+        balanceUpdate(transfer);
+        var newTransfer = await createTransfer(transfer);
         await transferService.Send(newTransfer);
         return CreatedAtAction(nameof(GetById), new { id = newTransfer.Id}, newTransfer);
     }
@@ -107,5 +104,63 @@ public class TransferController : ControllerBase
     private NotFoundObjectResult TransferNotFound(Guid id)
     {
         return NotFound(new { message = $"La cuenta con ID = ({id}) no existe."});
+    }
+
+    private async Task<Transfer> createTransfer(TransferDtoIn transfer)
+    {
+        Account fromAccount =  accountService.GetByNum(transfer.FromAccountNum);
+        Client fromClient =  await clientService.GetByNum(transfer.FromClientDocNumber);
+
+        Account toAccount =   accountService.GetByNum(transfer.ToAccountNum);
+        Client toClient =  await clientService.GetByNum(transfer.ToClientDocNumber);
+
+        Transfer newTransfer = new Transfer();
+        newTransfer.FromAccount = fromAccount;
+        newTransfer.FromClient = fromClient;
+        newTransfer.Amount = transfer.Amount;
+        newTransfer.ToAccount = toAccount;
+        newTransfer.ToClient = toClient;
+        newTransfer.State = transfer.State;
+
+        return newTransfer;
+    }
+
+    private bool valNullEmpty(TransferDtoIn transfer)
+    {
+        if(String.IsNullOrEmpty(transfer.ToString()))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private async Task<bool> insufficientBalance(TransferDtoIn transfer)
+    {
+        Account fromBalance =  accountService.GetByNum(transfer.FromAccountNum);
+        if(fromBalance.Balance < transfer.Amount){
+            return true;
+        }
+        return false;
+    }
+
+    private async Task<bool> banksEquals(TransferDtoIn transfer)
+    {
+        Account fromBank = accountService.GetByNum(transfer.FromAccountNum);
+        Account toBank =  accountService.GetByNum(transfer.ToAccountNum);
+
+        if(fromBank.Bank.BankCode.Equals(toBank.Bank.BankCode))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void balanceUpdate(TransferDtoIn transfer)
+    {
+        Account fromAccount = accountService.GetByNum(transfer.FromAccountNum);
+        Account toAccount =  accountService.GetByNum(transfer.ToAccountNum);
+        
+        accountService.UpdateBalanceOut(fromAccount, transfer.Amount);
+        accountService.UpdateBalanceIn(toAccount, transfer.Amount);
     }
 }

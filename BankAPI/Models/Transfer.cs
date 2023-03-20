@@ -10,12 +10,10 @@ public class Transfer
     //se supone son mi FK
     public Account FromAccount { get; set; } = new Account();
     public Client FromClient { get; set; } = new Client();
-    public Bank FromBank { get; set; } = new Bank();
     public DateTime Date { get; set; }
     public decimal Amount { get; set; }
     public Account ToAccount { get; set;} = new Account();
     public Client ToClient { get; set; } = new Client();
-    public Bank ToBank { get; set; } = new Bank();
     public string State { get; set; } = string.Empty;
 
     public Transfer(Account fromAccountNum, 
@@ -31,11 +29,9 @@ public class Transfer
     {
         FromAccount = fromAccountNum;
         FromClient = fromClientDocNumber;
-        FromBank = fromBank;
         Amount = amount;
         ToAccount = toAccountNum;
         ToClient = toClientDocNumber;
-
         State = state;
     }
 

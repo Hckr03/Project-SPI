@@ -19,8 +19,12 @@ public class TransferService
     public async Task<IEnumerable<Transfer>> GetALL()
     {
         return await bankDbContext.Transfers
-            // .Include(a => a.Account)
-            // .Include(c => c.Client)
+            .Include(a => a.FromAccount)
+            .Include(c => c.FromClient)
+            .Include(c => c.FromAccount.Bank)
+            .Include(a => a.ToAccount)
+            .Include(c => c.ToClient)
+            .Include(c => c.ToAccount.Bank)
             .ToListAsync();
     }
 

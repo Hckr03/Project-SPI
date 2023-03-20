@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\gcaballero\\Documents\\Project-SPI\\BankAPI\\BankAPI.csproj": {}
+    "/Users/hckr/Documents/Project-SPI/BankAPI/BankAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\gcaballero\\Documents\\Project-SPI\\BankAPI\\BankAPI.csproj": {
+    "/Users/hckr/Documents/Project-SPI/BankAPI/BankAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\gcaballero\\Documents\\Project-SPI\\BankAPI\\BankAPI.csproj",
+        "projectUniqueName": "/Users/hckr/Documents/Project-SPI/BankAPI/BankAPI.csproj",
         "projectName": "BankAPI",
-        "projectPath": "C:\\Users\\gcaballero\\Documents\\Project-SPI\\BankAPI\\BankAPI.csproj",
-        "packagesPath": "C:\\Users\\gcaballero\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\gcaballero\\Documents\\Project-SPI\\BankAPI\\obj\\",
+        "projectPath": "/Users/hckr/Documents/Project-SPI/BankAPI/BankAPI.csproj",
+        "packagesPath": "/Users/hckr/.nuget/packages/",
+        "outputPath": "/Users/hckr/Documents/Project-SPI/BankAPI/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\gcaballero\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/hckr/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -82,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.406\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.406/RuntimeIdentifierGraph.json"
         }
       }
     }

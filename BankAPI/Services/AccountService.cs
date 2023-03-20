@@ -21,33 +21,34 @@ public class AccountService
     public async Task<IEnumerable<Account>> GetAll()
     {
         return await bankDbContext.Accounts
-            // .Include(a => a.Client)
-            // .Include(a => a.Bank)
+            .Include(a => a.Client)
+            .Include(a => a.Bank)
             .ToListAsync();
-
-        // return await bankDbContext.Accounts.Select( a => new AccountDtoOut {
-        //     Id = a.Id,
-        //     AccountNum = a.AccountNum,
-        //     Currency = a.Currency,
-        //     Balance = a.Balance,
-        //     Client = a.Client,
-        //     Bank = a.Bank,
-        //     Transfers = a.Transfers
-        // }).ToListAsync();
     }
 
     public async Task<Account?> GetById(Guid id)
     {
-        return await bankDbContext.Accounts.FindAsync(id);
-    }
-
-    public async Task<Account?> GetByNum(string accountNum)
-    {
         return await bankDbContext.Accounts
-        .FirstOrDefaultAsync(b => b.AccountNum.ToLower() == accountNum.ToLower());
+        .Where(a => a.Id == id)
+        .Include(a => a.Client)
+        .Include(a => a.Bank)
+        .SingleOrDefaultAsync();
+        // return await bankDbContext.Accounts
+        //     .FindAsync(id);
     }
 
-    public async Task<Bank?> GetByCode(String code)
+    public Account GetByNum(string accountNum)
+    {
+        // return await bankDbContext.Accounts
+        // .FirstOrDefaultAsync(b => b.AccountNum.ToLower() == accountNum.ToLower());
+        return bankDbContext.Accounts
+        .Where(a => a.AccountNum == accountNum)
+        .Include(a => a.Client)
+        .Include(a => a.Bank)
+        .SingleOrDefault();
+    }
+
+    public async Task<Bank> GetByCode(string code)
     {
         return await bankDbContext.Banks
         .FirstOrDefaultAsync(b => b.BankCode.ToLower() == code.ToLower());
@@ -73,6 +74,20 @@ public class AccountService
 
             await bankDbContext.SaveChangesAsync();
         }
+    }
+
+    public void UpdateBalanceOut(Account account, decimal amount)
+    {
+        var newBalance = GetByNum(account.AccountNum);
+            newBalance.Balance = Decimal.Subtract(newBalance.Balance, amount);
+             bankDbContext.SaveChangesAsync();
+    }
+
+    public async Task UpdateBalanceIn(Account account, decimal amount)
+    {
+        var newBalance = GetByNum(account.AccountNum);
+            newBalance.Balance = Decimal.Add(newBalance.Balance, amount);
+            await bankDbContext.SaveChangesAsync();
     }
 
     public async Task Delete(Guid id)

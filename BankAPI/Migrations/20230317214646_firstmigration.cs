@@ -47,7 +47,7 @@ namespace BankAPI.Migrations
                     Currency = table.Column<string>(type: "text", nullable: false),
                     Balance = table.Column<decimal>(type: "numeric", nullable: false),
                     ClientDocNumber = table.Column<string>(type: "text", nullable: false),
-                    BankId = table.Column<Guid>(type: "uuid", nullable: true)
+                    BankId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,7 +56,8 @@ namespace BankAPI.Migrations
                         name: "FK_Accounts_Banks_BankId",
                         column: x => x.BankId,
                         principalTable: "Banks",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Accounts_Clients_ClientDocNumber",
                         column: x => x.ClientDocNumber,
@@ -70,28 +71,39 @@ namespace BankAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AccountNum = table.Column<string>(type: "text", nullable: false),
-                    ClientDocNumber = table.Column<string>(type: "text", nullable: false),
+                    FromAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    FromClientDocNumber = table.Column<string>(type: "text", nullable: true),
                     Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    State = table.Column<string>(type: "text", nullable: false),
-                    AccountId = table.Column<Guid>(type: "uuid", nullable: false)
+                    ToAccountId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ToClientDocNumber = table.Column<string>(type: "text", nullable: true),
+                    State = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Transfers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Transfers_Accounts_AccountId",
-                        column: x => x.AccountId,
+                        name: "FK_Transfers_Accounts_FromAccountId",
+                        column: x => x.FromAccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Transfers_Clients_ClientDocNumber",
-                        column: x => x.ClientDocNumber,
-                        principalTable: "Clients",
-                        principalColumn: "DocNumber",
+                        name: "FK_Transfers_Accounts_ToAccountId",
+                        column: x => x.ToAccountId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Transfers_Clients_FromClientDocNumber",
+                        column: x => x.FromClientDocNumber,
+                        principalTable: "Clients",
+                        principalColumn: "DocNumber");
+                    table.ForeignKey(
+                        name: "FK_Transfers_Clients_ToClientDocNumber",
+                        column: x => x.ToClientDocNumber,
+                        principalTable: "Clients",
+                        principalColumn: "DocNumber");
                 });
 
             migrationBuilder.CreateIndex(
@@ -105,14 +117,24 @@ namespace BankAPI.Migrations
                 column: "ClientDocNumber");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transfers_AccountId",
+                name: "IX_Transfers_FromAccountId",
                 table: "Transfers",
-                column: "AccountId");
+                column: "FromAccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transfers_ClientDocNumber",
+                name: "IX_Transfers_FromClientDocNumber",
                 table: "Transfers",
-                column: "ClientDocNumber");
+                column: "FromClientDocNumber");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transfers_ToAccountId",
+                table: "Transfers",
+                column: "ToAccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transfers_ToClientDocNumber",
+                table: "Transfers",
+                column: "ToClientDocNumber");
         }
 
         /// <inheritdoc />

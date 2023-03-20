@@ -111,9 +111,6 @@ namespace BankAPI.Migrations
                     b.Property<Guid>("FromAccountId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("FromBankId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("FromClientDocNumber")
                         .HasColumnType("text");
 
@@ -130,8 +127,6 @@ namespace BankAPI.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("FromAccountId");
-
-                    b.HasIndex("FromBankId");
 
                     b.HasIndex("FromClientDocNumber");
 
@@ -169,12 +164,6 @@ namespace BankAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BankAPI.Models.Bank", "FromBank")
-                        .WithMany()
-                        .HasForeignKey("FromBankId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BankAPI.Models.Client", "FromClient")
                         .WithMany()
                         .HasForeignKey("FromClientDocNumber");
@@ -190,8 +179,6 @@ namespace BankAPI.Migrations
                         .HasForeignKey("ToClientDocNumber");
 
                     b.Navigation("FromAccount");
-
-                    b.Navigation("FromBank");
 
                     b.Navigation("FromClient");
 

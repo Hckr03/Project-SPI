@@ -1,11 +1,19 @@
 {
   "Version": 1,
-  "Hash": "yRUcQgn6Pf00f8NRRIicZD6aOPgXwygj2HIsh3J2cGg=",
+  "Hash": "e4pltJK0gdV5XzSvb/IeSschcNPfi4PLteCSKML7y6Y=",
   "Source": "BankAPI",
   "BasePath": "_content/BankAPI",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "BankAPI/wwwroot",
+      "Source": "BankAPI",
+      "ContentRoot": "/Users/hckr/Documents/Project-SPI/BankAPI/wwwroot/",
+      "BasePath": "_content/BankAPI",
+      "Pattern": "**"
+    }
+  ],
   "Assets": []
 }

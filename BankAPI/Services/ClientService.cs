@@ -29,7 +29,7 @@ public class ClientService
         return await bankDbContext.Clients.FindAsync(id);
     }
 
-        public async Task<Client?> GetByNum(string docNum)
+        public async Task<Client> GetByNum(string docNum)
     {
         return await bankDbContext.Clients
         .FirstOrDefaultAsync(b => b.DocNumber.ToLower() == docNum.ToLower());
