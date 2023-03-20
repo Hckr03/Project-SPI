@@ -42,10 +42,37 @@ public class TransferController : ControllerBase
         return transfer;
     }
 
+    [HttpGet("state/{state}")]
+    public async Task<ActionResult<Transfer?>> GetByState(string state)
+    {
+        var transfer = await transferService.GetByState(state);
+        if(transfer.Any() != true)
+        {
+            return BadRequest(new { message = $"No existen transferencias con el estado de $({state})"});
+        }
+        return Ok(transfer);
+    }
+
+    [HttpGet("account/{accountNum}")]
+    public async Task<ActionResult<Transfer?>> GetByAccount(string accountNum)
+    {
+        var transfer = await transferService.GetByAccount(accountNum);
+        if(transfer.Any() != true) return BadRequest(new { message = $"El numero de cuenta $({accountNum}) ingresado no existe"});
+        return Ok(transfer);
+    }
+
+    [HttpGet("client/{docNum}")]
+    public async Task<ActionResult<Transfer?>> GetByClient(string docNum)
+    {
+        var transfer = await transferService.GetByClient(docNum);
+        if(transfer.Any() != true) return BadRequest(new { message = $"El numero de Cliente $({docNum}) ingresado no existe"});
+        return Ok(transfer);
+    }
+
     [HttpPost]
     public async Task<ActionResult<Transfer>> Send(TransferDtoIn transfer)
     {
-        if(valNullEmpty(transfer))
+        if(await valNullEmpty(transfer))
         {
             return BadRequest(new { message = "El formulario de transferencias posee campos vacios o nulos"});
         }
@@ -60,31 +87,24 @@ public class TransferController : ControllerBase
             return BadRequest(new { message = "No se puede realizar esta operacion debido a que ambas cuentas son del mismo Banco"});
         }
 
-        balanceUpdate(transfer);
+        await updateBalance(transfer);
         var newTransfer = await createTransfer(transfer);
         await transferService.Send(newTransfer);
         return CreatedAtAction(nameof(GetById), new { id = newTransfer.Id}, newTransfer);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Transfer>> UpdateState(Guid id, Transfer transfer)
+    public async Task<ActionResult<Transfer>> UpdateState(Guid id, StateDotIn state)
     {
-        if(id != transfer.Id)
+        Transfer transfer = await transferService.GetById(id);
+        if(transfer is null)
         {
-            return BadRequest(new { message = $"El nro de transferencia({id}) de la URL no coincide con el nro de transferencia({transfer.Id}) del cuerpo de la solicitud."});
+            return BadRequest(new { message = $"El nro de transferencia ({id}) no existe!"});
         }
-
-        var transferToUpdate = await transferService.GetById(id);
-        if(transferToUpdate is not null)
-        {
-            await transferService.UpdateState(id, transfer);
-            return NoContent();
-        }
-        else
-        {
-            return TransferNotFound(id);
-        }
+        await transferService.UpdateState(transfer.Id, state);
+        return Ok(new { message = $"Se actualizo el estado de la transferencia con id:({transfer.Id})"});
     }
+    
 
     [HttpDelete]
     public async Task<ActionResult<Transfer>> Delete(Guid id)
@@ -108,10 +128,10 @@ public class TransferController : ControllerBase
 
     private async Task<Transfer> createTransfer(TransferDtoIn transfer)
     {
-        Account fromAccount =  accountService.GetByNum(transfer.FromAccountNum);
+        Account fromAccount = await accountService.GetByNum(transfer.FromAccountNum);
         Client fromClient =  await clientService.GetByNum(transfer.FromClientDocNumber);
 
-        Account toAccount =   accountService.GetByNum(transfer.ToAccountNum);
+        Account toAccount = await accountService.GetByNum(transfer.ToAccountNum);
         Client toClient =  await clientService.GetByNum(transfer.ToClientDocNumber);
 
         Transfer newTransfer = new Transfer();
@@ -125,7 +145,7 @@ public class TransferController : ControllerBase
         return newTransfer;
     }
 
-    private bool valNullEmpty(TransferDtoIn transfer)
+    private async Task<bool> valNullEmpty(TransferDtoIn transfer)
     {
         if(String.IsNullOrEmpty(transfer.ToString()))
         {
@@ -136,7 +156,7 @@ public class TransferController : ControllerBase
 
     private async Task<bool> insufficientBalance(TransferDtoIn transfer)
     {
-        Account fromBalance =  accountService.GetByNum(transfer.FromAccountNum);
+        Account? fromBalance =  await accountService.GetByNum(transfer.FromAccountNum);
         if(fromBalance.Balance < transfer.Amount){
             return true;
         }
@@ -145,8 +165,8 @@ public class TransferController : ControllerBase
 
     private async Task<bool> banksEquals(TransferDtoIn transfer)
     {
-        Account fromBank = accountService.GetByNum(transfer.FromAccountNum);
-        Account toBank =  accountService.GetByNum(transfer.ToAccountNum);
+        Account? fromBank = await accountService.GetByNum(transfer.FromAccountNum);
+        Account? toBank = await accountService.GetByNum(transfer.ToAccountNum);
 
         if(fromBank.Bank.BankCode.Equals(toBank.Bank.BankCode))
         {
@@ -155,12 +175,12 @@ public class TransferController : ControllerBase
         return false;
     }
 
-    private void balanceUpdate(TransferDtoIn transfer)
+    private async Task updateBalance(TransferDtoIn transfer)
     {
-        Account fromAccount = accountService.GetByNum(transfer.FromAccountNum);
-        Account toAccount =  accountService.GetByNum(transfer.ToAccountNum);
-        
-        accountService.UpdateBalanceOut(fromAccount, transfer.Amount);
-        accountService.UpdateBalanceIn(toAccount, transfer.Amount);
+        Account? fromAccount = await accountService.GetByNum(transfer.FromAccountNum);
+        Account? toAccount = await accountService.GetByNum(transfer.ToAccountNum);
+
+        fromAccount.Balance = Decimal.Subtract(fromAccount.Balance, transfer.Amount);
+        toAccount.Balance = Decimal.Add(toAccount.Balance, transfer.Amount);
     }
 }

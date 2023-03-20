@@ -33,22 +33,20 @@ public class AccountService
         .Include(a => a.Client)
         .Include(a => a.Bank)
         .SingleOrDefaultAsync();
-        // return await bankDbContext.Accounts
-        //     .FindAsync(id);
     }
 
-    public Account GetByNum(string accountNum)
+    public async Task<Account?> GetByNum(string accountNum)
     {
         // return await bankDbContext.Accounts
         // .FirstOrDefaultAsync(b => b.AccountNum.ToLower() == accountNum.ToLower());
-        return bankDbContext.Accounts
+        return await bankDbContext.Accounts
         .Where(a => a.AccountNum == accountNum)
         .Include(a => a.Client)
         .Include(a => a.Bank)
-        .SingleOrDefault();
+        .SingleOrDefaultAsync();
     }
 
-    public async Task<Bank> GetByCode(string code)
+    public async Task<Bank?> GetByCode(string code)
     {
         return await bankDbContext.Banks
         .FirstOrDefaultAsync(b => b.BankCode.ToLower() == code.ToLower());
@@ -74,20 +72,6 @@ public class AccountService
 
             await bankDbContext.SaveChangesAsync();
         }
-    }
-
-    public void UpdateBalanceOut(Account account, decimal amount)
-    {
-        var newBalance = GetByNum(account.AccountNum);
-            newBalance.Balance = Decimal.Subtract(newBalance.Balance, amount);
-             bankDbContext.SaveChangesAsync();
-    }
-
-    public async Task UpdateBalanceIn(Account account, decimal amount)
-    {
-        var newBalance = GetByNum(account.AccountNum);
-            newBalance.Balance = Decimal.Add(newBalance.Balance, amount);
-            await bankDbContext.SaveChangesAsync();
     }
 
     public async Task Delete(Guid id)
